@@ -30,101 +30,161 @@ public:
     void hashSort(bool isKey);               //function to sort
 };
 
-    void HashMap ::  display()      //function to display all entries in hashmap
-    {
-        for(int i=0; i<capacity; i++) {
-            if(keyMap[i] != -1) {
-                cout<<i<<"| "<< keyMap[i] <<" "<< valueMap[i]<<"\n";
-            }
-            else{
-                cout<<i<<"| "<< "NULL "<< "NULL"<<"\n";
-            }
+void HashMap ::  display()      //function to display all entries in hashmap
+{
+    for(int i=0; i<capacity; i++) {
+        if(keyMap[i] != -1) {
+            cout<<i<<"| "<< keyMap[i] <<" "<< valueMap[i]<<"\n";
+        }
+        else{
+            cout<<i<<"| "<< "NULL "<< "NULL"<<"\n";
         }
     }
+}
 
-    void HashMap ::  modFunc(int key,string value)      //Function to find location for key to place in hashmap
+void HashMap ::  modFunc(int key,string value)      //Function to find location for key to place in hashmap
+{
+    int index=(key%capacity);
+    while(keyMap[index]!=-1){
+        if(keyMap[index]==key){
+            cout<<"Key already exists"<<endl;
+            return;
+        }
+        index=(index+1)%capacity;
+    }
+    keyMap[index]=key;
+    valueMap[index]=value;
+    size++;
+    cout<<"Key successfully allocated"<<endl;
+}
+
+void HashMap ::  insert(int key,string value)       //Function to insert key value pair in hashmap
+{
+    if(size==capacity)
+        cout<<"HashMap is full"<<endl;
+    else
     {
-        int index=(key%capacity);
-        while(keyMap[index]!=-1){
-            if(keyMap[index]==key){
-                cout<<"Key already exists"<<endl;
+        modFunc(key,value);
+    }
+}
+void HashMap ::  getValue(int key)      //function to get value of a key
+{
+    int t = key % capacity;
+    int i = t;
+    do {
+        if(keyMap[i] != -1) {
+            if(keyMap[i] == key){
+                cout<<"Value = "<<valueMap[i]<<endl;
                 return;
             }
-            index=(index+1)%capacity;
         }
-        keyMap[index]=key;
-        valueMap[index]=value;
-        size++;
-        cout<<"Key successfully allocated"<<endl;
-    }
+        i = (i+1)%capacity;
+    } while(t != i);
+    cout<<"Key not found"<<endl;
+}
 
-    void HashMap ::  insert(int key,string value)       //Function to insert key value pair in hashmap
-    {
-        if(size==capacity)
-            cout<<"HashMap is full"<<endl;
+void HashMap ::  modify(int key, string value) {        //Function to modify key value pair
+    int t = key % capacity;
+    int i = t;
+    do {
+        if(keyMap[i] != -1) {
+            if(keyMap[i] == key) {
+                valueMap[i] = value;
+                return ;
+            }
+        }
         else
-        {
-            modFunc(key,value);
+            return;
+        i = (i+1)%capacity;
+    } while(t != i);
+    cout<<"Key not found\n";
+}
+
+void HashMap ::  deleteKey(int key) {      //function to delete a key value pair
+    int t = key % capacity;
+    int i = t;
+    do {
+        if(keyMap[i] != -1) {
+            if(keyMap[i] == key) {
+                keyMap[i] = -1;
+                valueMap[i] = "";
+                return ;
+            }
         }
-    }
-    void HashMap ::  getValue(int key)      //function to get value of a key
-    {
-        int t = key % capacity;
-        int i = t;
-        do {
-            if(keyMap[i] != -1) {
-                if(keyMap[i] == key){
-                    cout<<"Value = "<<valueMap[i]<<endl;
-                    return;
-                }
-            }
-            i = (i+1)%capacity;
-        } while(t != i);
-        cout<<"Key not found"<<endl;
-    }
+        i = (i+1)%capacity;
+    } while(t != i);
+    cout<<"Key not found\n";
+}
 
-    void HashMap ::  modify(int key, string value) {        //Function to modify key value pair
-        int t = key % capacity;
-        int i = t;
-        do {
-            if(keyMap[i] != -1) {
-                if(keyMap[i] == key) {
-                    valueMap[i] = value;
-                    return ;
-                }
-            }
-            else
-                return;
-            i = (i+1)%capacity;
-        } while(t != i);
-        cout<<"Key not found\n";
+void HashMap ::  deleteAll() {      //function to clear whole hashmap
+    for(int i=0; i<capacity; i++) {
+        keyMap[i] = -1;
+        valueMap[i] = "";
     }
-
-    void HashMap ::  deleteKey(int key) {      //function to delete a key value pair
-        int t = key % capacity;
-        int i = t;
-        do {
-            if(keyMap[i] != -1) {
-                if(keyMap[i] == key) {
-                    keyMap[i] = -1;
-                    valueMap[i] = "";
-                    return ;
-                }
-            }
-            i = (i+1)%capacity;
-        } while(t != i);
-        cout<<"Key not found\n";
-    }
-
-    void HashMap ::  deleteAll() {      //function to clear whole hashmap
-        for(int i=0; i<capacity; i++) {
-            keyMap[i] = -1;
-            valueMap[i] = "";
-        }
-        cout<<"Hash map deleted successfully\n";
-    }                         
+    cout<<"Hash map deleted successfully\n";
+}                         
     
-    void HashMap ::  hashSort(bool isKey){}               //function to sort
+void HashMap :: hashSort(bool isKey)
+{
+    int *keyArr = new int[capacity];
+    string *valueArr = new string[capacity];
+    int n = 0;
+    for (int i = 0,j = 0; i<capacity ; i++)
+    {
+        if (keyMap[i] != -1)
+        {
+            keyArr[j] = keyMap[i];
+            valueArr[j] = valueMap[i];
+            j++;
+            n++;
+        }
+    }
+
+    if(isKey)
+    {
+        for (int i = 0; i < n-1; i++)
+        {
+            for (int j = 0; j < n-i-1; j++)
+            {
+                if (keyArr[j] > keyArr[j+1])
+                {
+                    int tempInt = keyArr[j];
+                    keyArr[j] = keyArr[j+1];
+                    keyArr[j+1] = tempInt;
+                    
+                    string tempString = valueArr[j];
+                    valueArr[j] = valueArr[j+1];
+                    valueArr[j+1] = tempString;
+
+                }
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < n-1; i++)
+        {
+            for (int j = 0; j < n-i-1; j++)
+            {
+                if (valueArr[j].compare(valueArr[j+1]) > 0)
+                {
+                    int tempInt = keyArr[j];
+                    keyArr[j] = keyArr[j+1];
+                    keyArr[j+1] = tempInt;
+                    
+                    string tempString = valueArr[j];
+                    valueArr[j] = valueArr[j+1];
+                    valueArr[j+1] = tempString;
+                }
+            }
+        }
+    }
+    cout<<"\n\nSorted Values : \n"<<endl;
+    for (int i = 0; i < n ; i++)
+    {
+        cout<<i<<"| "<< keyArr[i] <<" "<< valueArr[i]<<"\n";
+    }
+}
 
 int main()
 {
