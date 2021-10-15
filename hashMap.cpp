@@ -30,10 +30,58 @@ public:
     void hashSort(bool isKey);               //function to sort
 };
 
-    void HashMap ::  display(){}                          //function to display all entries in hashmap
-    void HashMap ::  modFunc(int key,string value){}      //Function to find location for key to place in hashmap
-    void HashMap ::  insert(int key,string value){}      //Function to insert key value pair in hashmap
-    void HashMap ::  getValue(int key){}                  //function to get value of a key
+    void HashMap ::  display()      //function to display all entries in hashmap
+    {
+        for(int i=0; i<capacity; i++) {
+            if(keyMap[i] != -1) {
+                cout<<i<<"| "<< keyMap[i] <<" "<< valueMap[i]<<"\n";
+            }
+            else{
+                cout<<i<<"| "<< "NULL "<< "NULL"<<"\n";
+            }
+        }
+    }
+
+    void HashMap ::  modFunc(int key,string value)      //Function to find location for key to place in hashmap
+    {
+        int index=(key%capacity);
+        while(keyMap[index]!=-1){
+            if(keyMap[index]==key){
+                cout<<"Key already exists"<<endl;
+                return;
+            }
+            index=(index+1)%capacity;
+        }
+        keyMap[index]=key;
+        valueMap[index]=value;
+        size++;
+        cout<<"Key successfully allocated"<<endl;
+    }
+
+    void HashMap ::  insert(int key,string value)       //Function to insert key value pair in hashmap
+    {
+        if(size==capacity)
+            cout<<"HashMap is full"<<endl;
+        else
+        {
+            modFunc(key,value);
+        }
+    }
+    void HashMap ::  getValue(int key)      //function to get value of a key
+    {
+        int t = key % capacity;
+        int i = t;
+        do {
+            if(keyMap[i] != -1) {
+                if(keyMap[i] == key){
+                    cout<<"Value = "<<valueMap[i]<<endl;
+                    return;
+                }
+            }
+            i = (i+1)%capacity;
+        } while(t != i);
+        cout<<"Key not found"<<endl;
+    }
     void HashMap ::  modify(int key, string value){}      //Function to modify key value pair
     void HashMap ::  deleteKey(int key){}                 //function to delete a key value pair
     void HashMap ::  deleteAll(){}                        //function to clear whole hashmap
@@ -50,7 +98,7 @@ int main()
     int choice,c;
     printf("****************************************** HASHMAP WITH LINEAR PROBING ******************************************\n\n");
 
-    do{                                                                
+    do{
         printf("\n\n\t\t**************** MENU *************\n\n");       //Menu
         printf("\t\t|\t1)INSERT\t\t|\n");
         printf("\t\t|\t2)MODIFY\t\t|\n");
@@ -85,7 +133,7 @@ int main()
         case 3:
             cout<<"\n\nEnter key value: ";
             cin>>key;
-            m->deleteKey(key);         //Call to delete 
+            m->deleteKey(key);         //Call to delete
             break;
 
         case 4:
