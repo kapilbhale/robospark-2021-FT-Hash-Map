@@ -82,9 +82,48 @@ public:
         } while(t != i);
         cout<<"Key not found"<<endl;
     }
-    void HashMap ::  modify(int key, string value){}      //Function to modify key value pair
-    void HashMap ::  deleteKey(int key){}                 //function to delete a key value pair
-    void HashMap ::  deleteAll(){}                        //function to clear whole hashmap
+
+    void HashMap ::  modify(int key, string value) {        //Function to modify key value pair
+        int t = key % capacity;
+        int i = t;
+        do {
+            if(keyMap[i] != -1) {
+                if(keyMap[i] == key) {
+                    valueMap[i] = value;
+                    return ;
+                }
+            }
+            else
+                return;
+            i = (i+1)%capacity;
+        } while(t != i);
+        cout<<"Key not found\n";
+    }
+
+    void HashMap ::  deleteKey(int key) {      //function to delete a key value pair
+        int t = key % capacity;
+        int i = t;
+        do {
+            if(keyMap[i] != -1) {
+                if(keyMap[i] == key) {
+                    keyMap[i] = -1;
+                    valueMap[i] = "";
+                    return ;
+                }
+            }
+            i = (i+1)%capacity;
+        } while(t != i);
+        cout<<"Key not found\n";
+    }
+
+    void HashMap ::  deleteAll() {      //function to clear whole hashmap
+        for(int i=0; i<capacity; i++) {
+            keyMap[i] = -1;
+            valueMap[i] = "";
+        }
+        cout<<"Hash map deleted successfully\n";
+    }                         
+    
     void HashMap ::  hashSort(bool isKey){}               //function to sort
 
 int main()
